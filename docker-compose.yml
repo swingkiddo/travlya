@@ -1,0 +1,17 @@
+version: '3'
+services:
+  backend:
+    build: ./backend
+    container_name: travlya_backend
+    ports:
+      - "0.0.0.0:8000:8000"
+  
+  frontend:
+    build: ./frontend/travlya_frontend
+    container_name: travlya_frontend
+    ports: 
+      - "127.0.0.1:3000:3000"
+
+  bot:
+    build: ./bot
+    container_name: travlya_bot
