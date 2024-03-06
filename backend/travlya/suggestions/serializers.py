@@ -18,7 +18,7 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
 class SuggestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Suggestion
-        fields = ["url", "user", "timestamp"]
+        fields = ["url", "embed_url", "user", "timestamp"]
 
     # def create(self, validated_data):
     #     print(validated_data)
@@ -31,4 +31,4 @@ class TwitchUsesrSerializer(serializers.ModelSerializer):
     suggestions = SuggestionSerializer(many=True, read_only=True)
     class Meta:
         model = TwitchUser
-        fields = ["twitch_id", "username", "suggestions", "rating"]
+        fields = ["twitch_id", "username", "suggestions", "rating", "display_name", "profile_image"]
