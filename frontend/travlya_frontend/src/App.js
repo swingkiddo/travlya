@@ -1,58 +1,17 @@
 import './App.css';
 import { useState, useEffect } from "react"
+
+import { UserSuggestions  } from './components/user_suggestions/UserSuggestions';
 const API_URL = "http://192.168.3.3:8000"
-
-
-function MyButton() {
-  const [count, setCount] = useState(0)
-
-  function handleClick() {
-    setCount(count + 1)
-  }
-
-  return (
-    <button onClick={handleClick}>
-      Clicked {count} times
-    </button>
-  )
-}
-
-function UserSuggestions({ user }) {
-  const suggestions = user.suggestions.map((s, index) => 
-      <iframe
-        className='suggestion-frame'
-        key={index}
-        width="560" 
-        height="315" 
-        src={s.url} 
-        title="YouTube video player" 
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" >
-      </iframe>
-
-
-    )
-  return (
-    <>
-      <div className='user-suggestions-wrapper'>
-        <div className='user-info'>{user.username}</div>
-        <div className='suggestions'>{suggestions}</div>
-      </div>
-
-    </>
-  )
-}
 
 function App() {
   const [users, setUsers] = useState([])
-  const [suggestion, setSuggestion] = useState()
 
   useEffect(() => {
     fetch(API_URL + "/users")
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         setUsers(data);
-        setSuggestion(data[0].suggestions[0]);
       })
       .catch((err) => {
         console.log(err.message)
@@ -61,56 +20,72 @@ function App() {
 
   
   if (users) {
-    const suggestions = users.map((user, i) => <UserSuggestions user={user} key={i} />) 
+    let filteredUsers = users.filter(user => {
+      // const sugs = user.suggestions.filter(sug => {
+      //   let date = new Date(sug.timestamp);
+      //   return is_today(date)
+      // });
+      // return sugs.length > 0
+      return user.suggestions.length > 0
+    }) 
+    console.log(filteredUsers)
+    const suggestions = filteredUsers.map((user, i) => <UserSuggestions user={user} key={i} />) 
     return (
       <div className='App'>
         <div className='App-header'>
             {suggestions}
-
-          {/* <iframe 
-            width="560" 
-            height="315" 
-            src={suggestion.url} 
-            title="YouTube video player" 
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-          >
-
-            </iframe> */}
         </div>
-        {/* <iframe width="560" height="360" src=></iframe> */}
       </div>
     )
   } else {
     return (
       <div>
-  
         <h1>Sheeeesh</h1>
-        <MyButton />
       </div>
     )
   }
 
 }
 
-// function App() {
+function is_today(date) {
+  let today = new Date();
+  if (date.getFullYear() == today.getFullYear() && date.getMonth() == today.getMonth() && date.getDate() == today.getDate()){
+    return true
+  }
+  return false
+}
+
+// function MyButton() {
+//   const [count, setCount] = useState(0)
+
+//   function handleClick() {
+//     setCount(count + 1)
+//   }
+
 //   return (
-//     <div className="App">
-//       <header className="App-header">
-//         <img src={logo} className="App-logo" alt="logo" />
-//         <p>
-//           Edit <code>src/App.js</code> and save to reload.
-//         </p>
-//         <a
-//           className="App-link"
-//           href="https://reactjs.org"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           Learn React
-//         </a>
-//       </header>
-//     </div>
-//   );
+//     <button onClick={handleClick}>
+//       Clicked {count} times
+//     </button>
+//   )
+// }
+
+// function RateButton({ user, suggestion, type }) {
+//   function rateUp() {
+//     console.log("+rep!")
+//   }
+
+//   function rateDown() {
+//     console.log("-rep!")
+//   }
+
+//   const text = type === "rateUp" ? "+rep" : "-rep"
+//   const onClickFunction = type === "rateUp" ? rateUp : rateDown
+//   return (
+//     <button className='rate-button' onClick={onClickFunction}>
+//       {text}
+//     </button>
+//   )
 // }
 
 export default App;
+
