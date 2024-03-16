@@ -6,6 +6,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Suggestion, TwitchUser
 
+import datetime
+
 from suggestions.serializers import GroupSerializer, UserSerializer, SuggestionSerializer, TwitchUsesrSerializer
 
 
@@ -34,6 +36,7 @@ class SuggestionList(APIView):
         return Response(serializer.data)
     
     def post(self, request, format=None):
+        print(request.data)
         serializer = SuggestionSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -54,7 +57,14 @@ class TwitchUserList(APIView):
             raise Http404
     
     def get(self, request, format=None):
-        users = TwitchUser.objects.all()
+        users = TwitchUser.objects.filter(
+            banned=False
+        ).exclude(
+            suggestions__isnull=True,
+        ).order_by("-rating")
+        print(users)
+        for u in users:
+            print(u.suggestions.all())
         serializer = TwitchUsesrSerializer(users, many=True)
         return Response(serializer.data)
     
