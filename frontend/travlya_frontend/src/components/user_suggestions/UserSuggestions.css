@@ -56,3 +56,12 @@
     margin-left: 20px;
     /* height: 50%; */
 }
+
+.hide-button-wrapper svg {
+    transform: scale(0.7);
+}
+
+.hide-button-wrapper svg:hover {
+    transform: scale(0.8);
+    cursor: pointer;
+}
