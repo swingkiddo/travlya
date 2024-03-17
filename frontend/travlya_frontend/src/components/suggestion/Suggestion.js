@@ -4,7 +4,7 @@ import "./Suggestion.css"
 import { UpdateRatingButton } from '../buttons/UpdateRatingButton/UpdateRatingButton'
 import { DeleteSuggestionButton } from '../buttons/DeleteSuggestionButton/DeleteSuggestionButton'
 
-export function Suggestion({ user, suggestion }) {
+export function Suggestion({ user, suggestion, deleteSuggestionButton }) {
     return (
       <div className='suggestion'>
         <iframe
@@ -21,7 +21,7 @@ export function Suggestion({ user, suggestion }) {
           <div className='suggestion-buttons'>
             <UpdateRatingButton user={user} type="minus" />
             <UpdateRatingButton user={user}  type="add" />
-            <DeleteSuggestionButton callback={() => console.log("op")} suggestion={suggestion} />
+            <DeleteSuggestionButton callback={() => console.log("op")} suggestion={suggestion}  />
           </div>
         {/* <div className='rate-buttons-wrapper'>
           <RateButton user={user} suggestion={suggestion} type="rateUp" />

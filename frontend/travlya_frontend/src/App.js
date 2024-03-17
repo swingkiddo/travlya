@@ -2,7 +2,8 @@ import './App.css';
 import { useState, useEffect } from "react"
 
 import { UserSuggestions  } from './components/user_suggestions/UserSuggestions';
-const API_URL = "http://45.8.96.82:8000"
+const API_URL = "http://45.8.96.82:8000" 
+// const API_URL = "http://192.168.3.9:8000" 
 
 function App() {
   const [users, setUsers] = useState([])
