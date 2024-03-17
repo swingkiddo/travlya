@@ -4,4 +4,4 @@ CLIENT_ID = "gp762nuuoqcoxypju8c569th9wz7q5"
 CHANNELS = ["koochablm"]
 PREFIX = "!"
 ADMIN_IDS = [456602329, "at0m", "koochablm"]
-API_URL = "http://192.168.3.3:8000"
+API_URL = "http://45.8.96.82:8000"
