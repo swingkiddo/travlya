@@ -25,6 +25,7 @@ urlpatterns = [
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
     path("suggestions", views.SuggestionList.as_view()),
     path("suggestions/<int:pk>", views.SuggestionList.as_view()),
-    path("users", views.TwitchUserList.as_view())
+    path("users", views.TwitchUserList.as_view()),
+    path("users/<int:pk>", views.TwitchUserList.as_view())
 ]
 
