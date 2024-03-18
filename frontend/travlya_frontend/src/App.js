@@ -1,9 +1,11 @@
 import './App.css';
-import { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react"
+import "./.env"
 
 import { UserSuggestions  } from './components/user_suggestions/UserSuggestions';
-const API_URL = "http://45.8.96.82:8000" 
+// const API_URL = "http://45.8.96.82:8000" 
 // const API_URL = "http://192.168.3.9:8000" 
+const API_URL = process.env.REACT_APP_API_URL
 
 function App() {
   const [users, setUsers] = useState([])

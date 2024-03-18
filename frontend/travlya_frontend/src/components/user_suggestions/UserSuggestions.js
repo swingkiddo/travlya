@@ -5,11 +5,10 @@ import { Suggestion } from "../suggestion/Suggestion";
 import { HideButton } from "../hide_button/HideButton";
 
 import { useState, useEffect } from "react";
+import React from "react";
 
 function initSuggestions(user, index) {
   let sugs = document.getElementsByClassName("suggestions");
-  console.log(sugs);
-  console.log(index);
   if (sugs.length) {
     sugs = sugs[index];
     sugs.classList.toggle("hidden");
@@ -19,11 +18,10 @@ function initSuggestions(user, index) {
 }
 
 export function UserSuggestions({ user }) {
-  const [suggestions, setSuggestions] = useState(user.suggestions.slice(-5).map((s, index) => <Suggestion user={user} suggestion={s} />))
+  const [suggestions, setSuggestions] = useState(user.suggestions.slice(-5).map((s, index) => <Suggestion user={user} key={index} suggestion={s} />))
 
   function deleteSuggestion(id) {
     let sugs = suggestions.filter(sug => sug.id != id);
-    console.log(sugs);
     setSuggestions(sugs);
   }
 

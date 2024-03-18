@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCaretUp } from "@fortawesome/free-solid-svg-icons"
 
-import { useState } from "react";
+import React, { useState } from "react";
 
 function toggleButton(event){
 
@@ -12,7 +12,6 @@ function toggleButton(event){
 
 export function HideButton() {
     const [rotation, setRotation] = useState(0);
-    console.log(rotation)
     function toggleHide(event) {
         let wrapper = event.currentTarget.closest(".user-suggestions-wrapper");
         let sugs = wrapper.getElementsByClassName("suggestions");

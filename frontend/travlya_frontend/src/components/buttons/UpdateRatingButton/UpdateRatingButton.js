@@ -1,12 +1,12 @@
 import { FontAwesomeIcon} from "@fortawesome/react-fontawesome"
 import { faPlus, faMinus } from "@fortawesome/free-solid-svg-icons"
+import React from "react"
 
 import "../buttons.css"
 
 export function UpdateRatingButton({ user, type }) {
-    const API_URL = `http://45.8.96.82:8000/users/${user.twtitch_id}`
-    // const API_URL = `http://192.168.3.9:8000/users/${user.twitch_id}`
-    console.log(API_URL)
+    const API_URL = `${process.env.REACT_APP_API_URL}/${user.twitch_id}`
+
     function addRating() {
         let body = {
             twitch_id: user.twitch_id,

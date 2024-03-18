@@ -1,12 +1,10 @@
 import { FontAwesomeIcon} from "@fortawesome/react-fontawesome"
 import { faTrash } from "@fortawesome/free-solid-svg-icons"
+import React from "react"
 
 export function DeleteSuggestionButton({suggestion }) {
   function deleteSuggestion(event) {
-    console.log("opa")
-    const API_URL = `http://45.8.96.82:8000/suggestions/${suggestion.id}`
-    // const API_URL = `http://192.168.3.9:8000/suggestions/${suggestion.id}`
-    console.log(API_URL)
+    const API_URL = `${process.env.REACT_APP_API_URLL}/${suggestion.id}`
     fetch(API_URL, {
       method: "DELETE"
     }).catch(err => console.log(err))

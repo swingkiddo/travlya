@@ -5,6 +5,7 @@ import { UpdateRatingButton } from '../buttons/UpdateRatingButton/UpdateRatingBu
 import { DeleteSuggestionButton } from '../buttons/DeleteSuggestionButton/DeleteSuggestionButton'
 
 export function Suggestion({ user, suggestion, deleteSuggestionButton }) {
+  
     return (
       <div className='suggestion'>
         <iframe
