@@ -1,7 +1,12 @@
-TWITCH_TOKEN = "e6p8urmkv0zkkx3p9uk924embfupqb"
-REFRESH_TOKEN = "38l4ufzbg5nf1hcjliv73jpvnpqrwt2xgyil8ualk5alvx32j1"
-CLIENT_ID = "gp762nuuoqcoxypju8c569th9wz7q5"
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
+API_URL = os.getenv("API_URL")
+TWITCH_TOKEN = os.getenv("TWITCH_TOKEN")
+REFRESH_TOKEN = os.getenv("REFRESH_TOKEN")
+CLIENT_ID = os.getenv("CLIEND_ID")
 CHANNELS = ["koochablm"]
 PREFIX = "!"
 ADMIN_IDS = [456602329, "at0m", "koochablm"]
-API_URL = "http://45.8.96.82:8000"
+
