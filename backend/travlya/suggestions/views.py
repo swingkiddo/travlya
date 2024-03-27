@@ -31,7 +31,12 @@ class SuggestionList(APIView):
             raise Http404
 
     def get(self, request, format=None):
-        suggestions = Suggestion.objects.all()
+        params = request.query_params
+        if params and "platform" in params:
+            platform = "Y" if params["platform"] == "youtube" else "T"
+            suggestions = Suggestion.objects.filter(platform=platform)
+        else:
+            suggestions = Suggestion.objects.all()
         serializer = SuggestionSerializer(suggestions, many=True)
         return Response(serializer.data)
     
@@ -62,9 +67,6 @@ class TwitchUserList(APIView):
         ).exclude(
             suggestions__isnull=True,
         ).order_by("-rating")
-        print(users)
-        for u in users:
-            print(u.suggestions.all())
         serializer = TwitchUsesrSerializer(users, many=True)
         return Response(serializer.data)
     
