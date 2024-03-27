@@ -18,7 +18,7 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
 class SuggestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Suggestion
-        fields = ["id", "url", "embed_url", "user", "timestamp"]
+        fields = ["id", "url", "embed_url", "user", "timestamp", "platform", "user_id"]
 
     # def create(self, validated_data):
     #     print(validated_data)
