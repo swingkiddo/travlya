@@ -1,5 +1,15 @@
+header {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 20px;
+  border-bottom: 1px solid rgb(143, 225, 248);
+  box-shadow: 3px 3px 2px #1b5f72;
+  margin-bottom: 5px;
+}
+
 .App {
   text-align: center;
+  background-color: #282c34;
 }
 
 .App-logo {
@@ -19,10 +29,20 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   font-size: calc(10px + 2vmin);
   color: white;
 }
+
+.App-header-buttons {
+  display: flex;
+  justify-content: space-around;
+  width: 12vh;
+}
+
+/* .fa-youtube {
+  background-color: red;
+} */
 
 .App-link {
   color: #61dafb;
@@ -37,46 +57,10 @@
   }
 }
 
-
-
 .rate-button {
   width: 20%;
   height: 10%;
   
-}
-
-
-/* CSS */
-.rate-button {
-  background-color: rgb(97, 218, 251);
-  border-radius: 100px;
-  box-shadow: rgba(44, 187, 99, .2) 0 -25px 18px -14px inset,rgba(44, 187, 99, .15) 0 1px 2px,rgba(44, 187, 99, .15) 0 2px 4px,rgba(44, 187, 99, .15) 0 4px 8px,rgba(44, 187, 99, .15) 0 8px 16px,rgba(44, 187, 99, .15) 0 16px 32px;
-  color: green;
-  cursor: pointer;
-  display: inline-block;
-  font-family: CerebriSans-Regular,-apple-system,system-ui,Roboto,sans-serif;
-  padding: 7px 20px;
-  text-align: center;
-  text-decoration: none;
-  transition: all 250ms;
-  border: 0;
-  font-size: 16px;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-}
-
-.rate-button:hover {
-  box-shadow: rgba(44,187,99,.35) 0 -25px 18px -14px inset,rgba(44,187,99,.25) 0 1px 2px,rgba(44,187,99,.25) 0 2px 4px,rgba(44,187,99,.25) 0 4px 8px,rgba(44,187,99,.25) 0 8px 16px,rgba(44,187,99,.25) 0 16px 32px;
-  transform: scale(1.05) rotate(-1deg);
-}
-
-.rate-buttons-wrapper {
-  margin-bottom: 10px;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-content: space-between;
 }
 
 iframe {

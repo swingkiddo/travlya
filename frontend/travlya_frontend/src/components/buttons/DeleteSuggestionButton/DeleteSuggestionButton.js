@@ -9,7 +9,7 @@ export function DeleteSuggestionButton({suggestion }) {
       method: "DELETE"
     }).catch(err => console.log(err))
   }
-  console.log("op")
+
   return (
     <div className="suggestion-delete-button">
       <FontAwesomeIcon icon={faTrash} onClick={deleteSuggestion} />

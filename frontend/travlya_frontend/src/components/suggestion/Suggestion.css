@@ -18,3 +18,19 @@
 /* .suggestion-buttons > div > svg {
     transform: scale(0.5%);
 } */
+
+.suggestion-switch-buttons {
+    display: flex;
+    justify-content: space-evenly;
+    margin: 10px 20px;
+    width: 5vw;
+}
+
+.suggestion-switch-button {
+    border-color: rgb(143, 225, 248);
+    border-width: 0.5px;
+}
+
+.suggestion-switch-button:hover {
+    cursor: pointer;
+}
