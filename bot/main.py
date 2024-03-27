@@ -7,6 +7,7 @@ import aiohttp
 import requests
 import logging
 import json
+import validators
 
 logger = logging.Logger("bot.logs", level=logging.DEBUG)
 
@@ -19,8 +20,9 @@ def message_contains_link(message: str) -> bool:
 def get_link_from_message(message: str) -> str:
     splitted_message = message.split(" ")
     for word in splitted_message:
-        if word.startswith("http"):
+        if validators.url(word):
             return word
+    return ""
 
 def whisper_to_user(text, from_id, user_id):
     url = f"https://api.twitch.tv/helix/whispers?from_user_id={from_id}&to_user_id={user_id}"
@@ -39,7 +41,20 @@ def is_admin(id):
 # class User:
 #     def __init__(self, twitch_id: int, username: str):
 #         pass
-        
+
+class InvalidURLError(Exception):
+    def __init__(self, *args):
+        if args:
+            self.message = args[0]
+        else:
+            self.message = None
+    
+    def __str__(self):
+        if self.message:
+            return f"InvalidURLError, {self.message}"
+        else:
+            return "InvalidURLError has been raised"
+
 class Suggestion:
     def __init__(self, url: str, user: User, timestamp: datetime):
         self.url = url
@@ -89,7 +104,7 @@ class Bot(commands.Bot):
                 "username": user.name,
                 "display_name": user.display_name,
                 "profile_image": user.profile_image,
-                "rating": 0
+                "rating": 100
             }
             async with aiohttp.ClientSession() as session:
                 async with session.post(url, data=data) as res:
@@ -144,7 +159,7 @@ class Bot(commands.Bot):
         print(res.status_code)
         print(res.content)
 
-    def delete_message(self, broadcaster_id, moderator_id, message_id, user_id):
+    def delete_message(self, broadcaster_id, moderator_id, message_id, user_id, timeput=True):
         url = f"https://api.twitch.tv/helix/moderation/chat?broadcaster_id={broadcaster_id}&moderator_id={moderator_id}&message_id={message_id}"
         headers = {
             "Authorization": f"Bearer {config.TWITCH_TOKEN}",
@@ -153,7 +168,7 @@ class Bot(commands.Bot):
         }
         res = requests.delete(url, headers=headers)
 
-        if res.status_code == 204:
+        if res.status_code == 204 and timeput:
             if user_id not in self.delete_counters:
                 self.delete_counters[user_id] = 1
             else:
@@ -166,53 +181,72 @@ class Bot(commands.Bot):
             print(res.text)
             logger.debug(res.text)
 
+    def validate_link(self, link):
+        if link.count("http") > 1 or not video_is_available(link):
+            raise InvalidURLError("Incorrect link or video is unavailable")
+        
+    async def toggle_sleep(self):
+        self.sleep = not self.sleep
+        channel = self.connected_channels[0]
+        if  not self.sleep:
+            await channel.send("сейчас больше с ссылками надо работать")
+        else:
+            await channel.send("чилю")
+
+    async def handle_travlya(self, link, message, channel_owner):
+        author = message.author
+        if self.link_already_added(link):
+            if self.link_added_by_user(link, author):
+                self.delete_message(channel_owner.id, self.user_id, message.id, author.id)
+            else:
+                await self.connected_channels[0].send(f"@{author.name}, ссылка уже предложена другим пользователем")
+        else:
+            await self.add_suggestion(author, link)
+
     async def event_message(self, message: Message):
+        print(message.content)
         if message.echo:
             return
         
         author = message.author
         if int(author.id) not in self.users:
             await self.register_user(author)
-        content = message.content.strip()
-        command = content.split(" ")[0]
+        content = message.content.strip().split(" ")
+        command = content[0]
+        args = content[1:] if len(content) > 1 else []
         channel = self.connected_channels[0]
         channel_owner = await channel.user()
 
         if command == "!sleep":
             if is_admin(author.name):
-                self.sleep = not self.sleep
-                if  not self.sleep:
-                    await channel.send("сейчас больше с ссылками надо работать")
-                else:
-                    await channel.send("чилю")
+                await self.toggle_sleep()
         
         if not self.sleep:
-            if message_contains_link(content):
-                link = get_link_from_message(content)
-                if not "!травля" in content:
-                    self.delete_message(channel_owner.id, self.user_id, message.id, author.id)
-
-                if command == "!травля":
-                    splitted = message.content.split(" ")
-                    if len(splitted) > 1:
-                        link = get_link_from_message(content)
-                        print(f"{link=}")
-                        if self.link_already_added(link):
-                            if self.link_added_by_user(link, author):
-                                self.delete_message(channel_owner.id, self.user_id, message.id, author.id)
-                            else:
-                                await self.connected_channels[0].send(f"@{author.name}, ссылка уже предложена другим пользователем")
-                        else:
-                            await self.add_suggestion(author, link)
+            if message_contains_link(message.content):
+                link = get_link_from_message(message.content)
+                if link and ("youtube" in link or "twitch" in link):
+                    if command != "!травля":
+                        self.delete_message(channel_owner.id, self.user_id, message.id, author.id)
+                    else:
+                        await self.handle_travlya(link, message, channel_owner)
     
     async def add_suggestion(self, author: Chatter, suggestion: str):
         url = f"{API_URL}/suggestions"
-        embed = suggestion.replace("watch?v=", "embed/")
+
+        if "youtube" in suggestion:
+            embed = suggestion.replace("watch?v=", "embed/")
+            platform = "Y"
+        if "twitch" in suggestion:
+            embed = suggestion.replace(".tv/", ".tv/embed?clip=") + "&parent=ae41-185-135-151-155.ngrok-free.app"
+            platform = "T"
+
         data = {
             "user": author.id,
             "url": suggestion,
-            "embed_url": embed
+            "embed_url": embed,
+            "platform": platform
         }
+
         async with aiohttp.ClientSession() as session:
             async with session.post(url, data=data) as res:
                 if res.status == 201:
@@ -251,6 +285,11 @@ class Bot(commands.Bot):
     async def hello(self, ctx: commands.Context):
         await ctx.send(f'Hello {ctx.author.name}!')
 
+def video_is_available(url):
+    res = requests.get(url)
+    if res.status_code == 200 and not "Это видео больше не доступно" in res.text:
+        return True
+    return False
 
 bot = Bot()
 bot.run()
